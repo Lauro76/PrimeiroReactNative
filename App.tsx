@@ -1,7 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,TextInput, TouchableOpacity} from 'react-native';
+import { useState } from 'react';
 
 export default function App() {
+
+    const[peso, setpeso] = useState('');
+    const[altura, setAltura] = useState('');
+    const[resultado, setResultado] = useState('');
+
+    function calcularImc() {
+      let  alturaEmMetro = parseFloat(altura) /100;
+      let result = parseFloat(peso)/(alturaEmMetro * alturaEmMetro);
+
+      let msg ="";
+      if(result < 18.5){
+        msg = "-abaixo do Peso"
+      } else if (result >= 18.5 && result <= 24.99){
+        msg = "- Peso Ideal"
+      }
+      if(result >= 25 && result <= 29.99){
+        msg = " -Levemente acima do Peso"
+      } else if (result >= 30 && result <= 34.99){
+        msg = " - Obesidade grau I"
+      }
+      if(result >= 35 && result <= 39.99){
+        msg = " - Obesidade grau II (severa)"
+      } else if (result > 40){
+        msg = " - Obesidade grau III ( mórbida)"
+      }
+      setResultado ("Valor do IMC: "+result.toFixed(2)+""+msg);
+    }
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>IMC</Text>
@@ -10,19 +38,29 @@ export default function App() {
             <Text style={styles.label}>Peso</Text>
               <TextInput 
               style={styles.input} 
+              keyboardType='numeric'
+              value={peso}
+              onChangeText={(valor)=> setpeso(valor)}
               />
         </View>
         <View style={styles.bloco}>
             <Text style={styles.label}>Altura</Text>
               <TextInput 
-              style={styles.input} 
+              style={styles.input}
+              keyboardType='numeric'
+              value={altura}
+              onChangeText={(valor)=> setAltura(valor)} 
               />
         </View>
 
         <View>
-            <TouchableOpacity style={styles.btnTxt}>
+            <TouchableOpacity style={styles.btnTxt} onPress={calcularImc}>
               <Text>Calcular</Text>
             </TouchableOpacity>
+        </View>
+
+        <View style={styles.bloco}>
+          <Text style={styles.label}>{resultado}</Text>
         </View>
 
     </View>
